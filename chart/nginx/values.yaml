@@ -161,4 +161,4 @@ cert:
 secret:
   name: dockerhub-secret
   type: kubernetes.io/dockerconfigjson
-  dockerConfigJSON: eyJhdXRocyI6eyJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOnsidXNlcm5hbWUiOiJlc3dhcm1hZ2FudGkiLCJwYXNzd29yZCI6ImhpbmZ1dC1oZWRxYXMtNEdhdnRlIiwiZW1haWwiOiJtYWdhbnRpLmVrQGdtYWlsLmNvbSIsImF1dGgiOiJaWE4zWVhKdFlXZGhiblJwT21ocGJtWjFkQzFvWldSeFlYTXRORWRoZG5SbCJ9fX0=
+  dockerConfigJSON: ${dockerConfigJSON}
