@@ -19,3 +19,6 @@ spec:
     parameters:
       - name: "image.tag"
         value: "4"
+  syncPolicy:
+    syncOptions:
+      - CreteNamespace=true
