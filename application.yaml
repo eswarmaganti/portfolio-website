@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: webapp
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/eswarmaganti/portfolio-website.git
+    targetRevision: main
+    path: chart
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: portfolio
+  helm:
+    releaseName: portfolio-website
+    valuesFiles:
+      - values.yaml
+    parameters:
+      - name: "image.tag"
+        value: "4"
