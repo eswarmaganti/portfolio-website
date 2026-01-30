@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/eswarmaganti/portfolio-website.git
     targetRevision: main
-    path: chart
+    path: chart/nginx
     helm:
       releaseName: portfolio-website
       valueFiles:
