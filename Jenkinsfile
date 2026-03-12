@@ -27,9 +27,19 @@ pipeline{
         '''
       }
     }
-    // stage("Local Container Test") {
+    stage("Local Container Test") {
+      steps {
+        sh '''
+          # Generate an SSL cert pair
+          mkdir ssl
+          openssl req -x509 -nodes -days 365 --type -newkey rsa:2048 -keyout ./ssl/tls.key -out ./ssl/tls.crt -subj "/CN=portfolio.eswarmaganti.local"
 
-    // }
+          docker run -d -p 8000:443 \
+          -v type=bind,$(pwd)/ssl:/etc/nginx/ssl \
+          ${IMAGE_NAME}:${IMAGE_TAG}
+        '''
+      }
+    }
     // stage("Docker CLI Login") {
 
     // }
