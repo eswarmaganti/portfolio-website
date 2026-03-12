@@ -1,0 +1,8 @@
+services:
+  portfolio:
+    image: eswarmaganti/portfolio:latest
+    build: .
+    volumes:
+      - ./ssl:/etc/nginx/ssl
+    ports:
+      - "8000:443"

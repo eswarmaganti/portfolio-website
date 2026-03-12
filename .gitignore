@@ -1,4 +1,4 @@
 .env
 chart/nginx/values_dev.yaml
 .idea
-scripts
+ssl
