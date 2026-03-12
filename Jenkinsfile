@@ -51,7 +51,7 @@ pipeline{
       steps {
         withCredentials([string(credentialsId: "dockerhub_pat", variable: "DOCKERHUB_PAT")]){
           sh '''
-            echo ${DOCKERHUB_PAT} | docker login -u eswarmaganti
+            echo ${DOCKERHUB_PAT} | docker login -u eswarmaganti --password-stdin
           '''
         }
       }
