@@ -49,10 +49,11 @@ pipeline{
     }
     stage("Docker CLI Login") {
       steps {
-        withCredentials([string(credentialsId: "dockerhub_pat", variable: "DOCKERHUB_PAT")])
-        sh '''
-          echo ${DOCKERHUB_PAT} | docker login -u eswarmaganti
-        '''
+        withCredentials([string(credentialsId: "dockerhub_pat", variable: "DOCKERHUB_PAT")]){
+          sh '''
+            echo ${DOCKERHUB_PAT} | docker login -u eswarmaganti
+          '''
+        }
       }
     }
 
