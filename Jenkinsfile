@@ -18,13 +18,16 @@ pipeline{
     stage("Dockerfile Linting") {
       steps {
         sh '''
+          echo "🔵 Performing Dockerfile Link Check "
           docker build -t "${IMAGE_NAME}:${IMAGE_TAG}" --check .
+          echo "🟢 Dockerfile Link Check successful "
         '''
       }
     }
     stage("Build Image") {
       steps {
         sh '''
+          echo "🔵 Building the Docker Image "
           docker build -t "${IMAGE_NAME}:${IMAGE_TAG}" .
         '''
       }
@@ -33,8 +36,11 @@ pipeline{
       steps {
         sh '''
           # Generate an SSL cert pair
+          echo "🔵 Generating a local self-signed SSL certs to test the image locally"
           mkdir -p ssl
           openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./ssl/tls.key -out ./ssl/tls.crt -subj "/CN=portfolio.eswarmaganti.local"
+
+          echo "🔵 Running the container locally"
 
           docker run -d -p 8000:443 \
           --mount type=bind,src=$(pwd)/ssl,target=/etc/nginx/ssl \
@@ -42,8 +48,12 @@ pipeline{
 
           curl -fk https://localhost:8000
 
+          echo "🟢 Local Image Testing is successful"
+          
+          echo "🔵 Cleaning up the local container"
           docker container stop ${CONTAINER_NAME}
           docker container rm ${CONTAINER_NAME}
+
         '''
       }
     }
@@ -51,6 +61,7 @@ pipeline{
       steps {
         withCredentials([string(credentialsId: "dockerhub_pat", variable: "DOCKERHUB_PAT")]){
           sh '''
+            echo "🔵 Publishing the Docker Image to Docker Hub Artifactory"
             echo ${DOCKERHUB_PAT} | docker login -u eswarmaganti --password-stdin
           '''
         }
@@ -60,10 +71,20 @@ pipeline{
     stage("Push Image to Artifactory") {
       steps {
         sh '''
+          echo "🔵 Publishing the image to Docker Hub Artifactory"
           docker image push ${IMAGE_NAME}:${IMAGE_TAG}
+          echo "🟢 Successfully Published the Image to Docker Hub Artifactory"
         '''
       }
     }
 
+  }
+  post {
+    success {
+      echo "🚀 Successfully pushed the image top Docker Hub ${IMAGE_NAME}:${IMAGE_TAG}"
+    }
+    failure {
+      echo "❌ Failed to push the image: Runtime exception occurred"
+    }
   }
 }
