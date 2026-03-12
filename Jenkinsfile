@@ -9,8 +9,8 @@ pipeline{
   stages{
     stage("Git Checkout") {
       steps {
-        git branch: main,
-        https://github.com/eswarmaganti/portfolio-website.git
+        git branch: "main",
+        url: "https://github.com/eswarmaganti/portfolio-website.git"
       }
     }
     stage("Dockerfile Linting") {
