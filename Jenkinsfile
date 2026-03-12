@@ -61,7 +61,7 @@ pipeline{
       steps {
         withCredentials([string(credentialsId: "dockerhub_pat", variable: "DOCKERHUB_PAT")]){
           sh '''
-            echo "🔵 Publishing the Docker Image to Docker Hub Artifactory"
+            echo "🔵 Login to Docker Hub Artifactory"
             echo ${DOCKERHUB_PAT} | docker login -u eswarmaganti --password-stdin
           '''
         }
