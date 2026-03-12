@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM nginx:alpine
 
 # Info
 LABEL maintainer="Eswar Krishna Maganti"
@@ -13,11 +13,11 @@ ARG NGINC_CONF_PATH=/etc/nginx
 # Create the required dirs
 RUN mkdir -p /usr/share/nginx/html /etc/nginx  /var/cache/nginx /var/run 
 
-RUN groupadd -g $ID $GROUP && \
-    useradd --system --create-home --uid $ID --gid $ID $USER
+RUN addgroup -g $ID $GROUP && \
+    adduser -D -u $ID -G $GROUP $USER
 
 # update the ownership to nginx user
-RUN chown -R app:deployment /usr/share/nginx/html /etc/nginx  /var/cache/nginx /var/run
+RUN chown -R app:deployment /usr/share/nginx/html /etc/nginx  /var/cache/nginx /var/run /run/
 
 # Copy the application files
 COPY app/index.html $DEPLOYMENT_PATH/
@@ -27,7 +27,7 @@ COPY app/nginx.conf $NGINC_CONF_PATH/
 
 EXPOSE 443/tcp 8443/tcp
 
-USER $ID
+USER $USER
 
 # Run the nginx in foreground
 CMD ["nginx", "-g", "daemon off;"]
