@@ -4,6 +4,8 @@ pipeline{
   environment {
     IMAGE_NAME = "eswarmaganti/portfolio"
     IMAGE_TAG = "${BUILD_NUMBER}"
+    CONTAINER_NAME = "portfolio_local_test"
+    DOCKERHUB_USER = "eswarmaganti"
   }
 
   stages{
@@ -36,17 +38,31 @@ pipeline{
 
           docker run -d -p 8000:443 \
           --mount type=bind,src=$(pwd)/ssl,target=/etc/nginx/ssl \
-          ${IMAGE_NAME}:${IMAGE_TAG}
+          --name ${CONTAINER_NAME} ${IMAGE_NAME}:${IMAGE_TAG}
+
+          curl -fk https://localhost:8000
+
+          docker container stop ${CONTAINER_NAME}
+          docker container rm ${CONTAINER_NAME}
         '''
       }
     }
-    // stage("Docker CLI Login") {
+    stage("Docker CLI Login") {
+      steps {
+        withCredentials([string(credentialsId: "dockerhub_pat", variable: "DOCKERHUB_PAT")])
+        sh '''
+          echo ${DOCKERHUB_PAT} | docker login -u eswarmaganti
+        '''
+      }
+    }
 
-    // }
-
-    // stage("Push Image to Artifactory") {
-
-    // }
+    stage("Push Image to Artifactory") {
+      steps {
+        sh '''
+          docker image push ${IMAGE_NAME}:${IMAGE_TAG}
+        '''
+      }
+    }
 
   }
 }
