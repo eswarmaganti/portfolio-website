@@ -31,7 +31,7 @@ pipeline{
       steps {
         sh '''
           # Generate an SSL cert pair
-          mkdir ssl
+          mkdir -p ssl
           openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./ssl/tls.key -out ./ssl/tls.crt -subj "/CN=portfolio.eswarmaganti.local"
 
           docker run -d -p 8000:443 \
